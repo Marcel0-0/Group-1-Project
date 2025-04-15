@@ -1,34 +1,44 @@
+#Programming for Data Analytics Group Project
 #Date: March 22, 2025
 #Group Members: Terence Tucker - 2405308, Marcel Manning - 2002905, Candeece Garrick - 2409063, Norman Ranger - 2405961
 
 import random
 
-import math
+import statistics
 
 #List created to store the values of the scores for the various games
-score = [0]
 
+ngscore = [0]
+wsscore = [0]
 
 
 #Keeps track of the current score of the player and displays it. 
-def cur_score_track():
-    return score[-1]
+def cur_ngscore_track():
+    return ngscore[-1]
 
 #Returns the first value of score.
-def cur_score_add():
-    return score[0]
+def cur_ngscore_add():
+    return ngscore[0]
+
+#Keeps track of the current score of the player and displays it. 
+def cur_wsscore_track():
+    return wsscore[-1]
+
+#Returns the first value of score.
+def cur_wsscore_add():
+    return wsscore[0]
 
 #Finds the sum of all the scores for the various games and returns it.
 def overall_score():
-    oscore = sum(score)
+    oscore = sum(ngscore) + sum(wsscore)
+    #wssum = sum(wsscore)
+    #oscore = ngsum + wssum
     return oscore
 
 #Finds the average of all the 
 def avg_score():
-    #print(score)
-    score.pop(0)
-    #print(score)
-    ascore = overall_score()/len(score)
+    oscore = sum(ngscore) + sum(wsscore)
+    ascore = statistics.mean(oscore)
     return ascore
 
 
@@ -46,23 +56,23 @@ def Number_Guess():
             rnumlist.append(rnum)
         
         count = 7
-        #score.append(cur_score_add() + 0)
+        ngscore.append(cur_ngscore_add() + 0)
         while (count != 0):
             gnum = int(input("\nPlease enter your guess as to what the number is: "))
             for i in rnumlist:
                 if (gnum == rnum):
-                    score.append(cur_score_add()+ 5)
-                    print("\nCongrautlations! You have successfully guessed the number and gained a score of", cur_score_track())
+                    ngscore.append(cur_ngscore_add()+ 5)
+                    print("\nCongrautlations! You have successfully guessed the number and gained a score of", cur_ngscore_track())
                     break
                 else:
-                    score.append(cur_score_add()+ 0)
-                    print("\nYour current score is:",cur_score_track())
+                    #ngscore.append(cur_ngscore_add()+ 0)
+                    print("\nYour current score is:",cur_ngscore_track())
                     break
             count -= 1
             print("You have", count, "tries left")
             
-        if (cur_score_track() >=5):
-            print("\nYou have won the game with",cur_score_track(),"points!")
+        if (cur_ngscore_track() >=5):
+            print("\nYou have won the game with",cur_ngscore_track(),"points!")
         else:
             print("\nUnfortunately you did not manage to win the game. \nBetter Luck Next Time!")
             
@@ -73,7 +83,7 @@ def Number_Guess():
             Number_Guess()
         else:
             print("\nYour current overall score is", overall_score())
-            print(score)
+            #print(score)
             main_menu()
     except ValueError:
         print("________________________________________________________")
@@ -108,7 +118,7 @@ def Word_Scramble():
                 print(f"❌ Wrong! The correct word was: {word}\n")
 
         #score.append(cur_score_add() + 0)
-        score.append(cur_score_add() + round_score)
+        wsscore.append(cur_wsscore_add() + round_score)
 
         print("🎉 You finished the Word Scramble round!")
         print(f"You got {round_score} out of 25 correct.")
@@ -167,8 +177,21 @@ def main_menu():
     except ValueError:
         print("You have entered an invalid option, you will be redirected to the main menu to try again")
         main_menu()
+    except:
+        print("\n An unexpected error has occurred, you will be redirected to the main menu to try again")
+        main_menu()
     
                    
 #Call to main menu function
 main_menu()
+                
+        
+         
+    
+    
+
+
+
+
+
                 
