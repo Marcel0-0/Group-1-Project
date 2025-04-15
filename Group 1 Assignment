@@ -1,0 +1,174 @@
+#Date: March 22, 2025
+#Group Members: Terence Tucker - 2405308, Marcel Manning - 2002905, Candeece Garrick - 2409063, Norman Ranger - 2405961
+
+import random
+
+import math
+
+#List created to store the values of the scores for the various games
+score = [0]
+
+
+
+#Keeps track of the current score of the player and displays it. 
+def cur_score_track():
+    return score[-1]
+
+#Returns the first value of score.
+def cur_score_add():
+    return score[0]
+
+#Finds the sum of all the scores for the various games and returns it.
+def overall_score():
+    oscore = sum(score)
+    return oscore
+
+#Finds the average of all the 
+def avg_score():
+    #print(score)
+    score.pop(0)
+    #print(score)
+    ascore = overall_score()/len(score)
+    return ascore
+
+
+#Number_Guess - Marcel Manning 
+def Number_Guess():
+    
+    print("Welcome to Number Guess! Please see the instructions of the game below\n")
+    print("This game will give you 7 tries to guess one of 4 numbers between 1 and 20")
+    print("You get 5 points for each correct answer but only need a minimum of 5 to win this game")
+      
+    rnumlist = []
+    try:
+        for i in range(4):
+            rnum = random.randint(2,21)
+            rnumlist.append(rnum)
+        
+        count = 7
+        #score.append(cur_score_add() + 0)
+        while (count != 0):
+            gnum = int(input("\nPlease enter your guess as to what the number is: "))
+            for i in rnumlist:
+                if (gnum == rnum):
+                    score.append(cur_score_add()+ 5)
+                    print("\nCongrautlations! You have successfully guessed the number and gained a score of", cur_score_track())
+                    break
+                else:
+                    score.append(cur_score_add()+ 0)
+                    print("\nYour current score is:",cur_score_track())
+                    break
+            count -= 1
+            print("You have", count, "tries left")
+            
+        if (cur_score_track() >=5):
+            print("\nYou have won the game with",cur_score_track(),"points!")
+        else:
+            print("\nUnfortunately you did not manage to win the game. \nBetter Luck Next Time!")
+            
+        choice = str(input("\nWould you like to continue playing this game or return to the main menu?\nType 'yes' to continue or any other key to return:"))
+        if (choice == 'yes'):
+            print("\nYour current overall score is", overall_score())
+            print("________________________________________________________")
+            Number_Guess()
+        else:
+            print("\nYour current overall score is", overall_score())
+            print(score)
+            main_menu()
+    except ValueError:
+        print("________________________________________________________")
+        print("You have entered an invalid value, only numbers are accepted.Please try again")
+        print("________________________________________________________")
+        Number_Guess()
+    except:
+        print("________________________________________________________")
+        print("Something went wrong.Please try again")
+        print("________________________________________________________")
+        Number_Guess()
+    
+        
+# Word_Scramble - Norman Ranger
+def Word_Scramble():
+    print("\nWelcome to Word Scramble!")
+    print("Unscramble 5 words. You earn 5 point for each correct answer.\n")
+
+    words = ['python', 'analytics', 'programming', 'database', 'variable', 'function', 'loop', 'boolean', 'string', 'integer']
+    selected_words = random.sample(words, 5)
+    round_score = 0
+    try:
+        for i, word in enumerate(selected_words, start=1):
+            scrambled = ''.join(random.sample(word, len(word)))
+            print(f"Word {i}: {scrambled}")
+            guess = input("Your guess: ").lower()
+
+            if guess == word:
+                print("✅ Correct!\n")
+                round_score += 5
+            else:
+                print(f"❌ Wrong! The correct word was: {word}\n")
+
+        #score.append(cur_score_add() + 0)
+        score.append(cur_score_add() + round_score)
+
+        print("🎉 You finished the Word Scramble round!")
+        print(f"You got {round_score} out of 25 correct.")
+        print("Your current overall score is:", overall_score())
+        print("________________________________________________________")
+
+        choice = input("Play another Word Scramble round? Type 'yes' to replay or 'no' to return to main menu: ").lower()
+        if choice == 'yes':
+            Word_Scramble()
+        else:
+            main_menu()
+    except:
+        print("________________________________________________________")
+        print("Something went wrong.Please try again")
+        print("________________________________________________________")
+        Word_Scramble()
+        
+        
+   
+#Defining a function which prompts the user to enter their name
+def user_info():
+    name = str(input("Please enter your name: "))
+    
+
+#Call to function that prompts user to enter their name
+user_info()
+
+#Main menu function which prompts the user to choose between different games
+def main_menu():
+    
+    print("\nPlease select a game from the list of options below: ")
+    print("Game 1 - type 'A' to play Number Guess")
+    print("Game 2 - type 'xx'")
+    print("Game 3 - type 'xxx'")
+    print("Game 4 - type 'D' to play Word Scramble")
+    print("Exit - X")
+    print("________________________________________________________")
+    try:
+        option = str(input("Please type one of the letters to decide which game you want to play: ")).upper()
+        
+        if option != 'X':
+            
+            match option:
+                case 'A':
+                    Number_Guess()
+                  
+                case 'D':
+                    Word_Scramble()
+        else:
+            print("Your average score for the games played is", avg_score())
+            print("\nThank you for playing our games and we hope you decide to play again in the future.")
+        
+    except RuntimeError:
+        print("\nAn error has occurred, you will be redirected to the main menu to try again")
+        main_menu()
+    except ValueError:
+        print("You have entered an invalid option, you will be redirected to the main menu to try again")
+        main_menu()
+    
+                   
+#Call to main menu function
+main_menu()
+                
