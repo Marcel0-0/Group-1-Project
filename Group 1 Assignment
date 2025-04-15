@@ -31,14 +31,12 @@ def cur_wsscore_add():
 #Finds the sum of all the scores for the various games and returns it.
 def overall_score():
     oscore = sum(ngscore) + sum(wsscore)
-    #wssum = sum(wsscore)
-    #oscore = ngsum + wssum
     return oscore
 
 #Finds the average of all the 
 def avg_score():
     oscore = sum(ngscore) + sum(wsscore)
-    ascore = statistics.mean(oscore)
+    ascore = statistics.mean([sum(ngscore), sum(wsscore)])
     return ascore
 
 
