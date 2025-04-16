@@ -1,8 +1,20 @@
+#Programming for Data Analytics Group Project
+#Date: March 22, 2025
+#Group Members: Terence Tucker - 2405308, Marcel Manning - 2002905, Candeece Garrick - 2409063, Norman Ranger - 2405961
+
+import random
+import pygame
+import sys
+import statistics
+
+name = str(input("Please enter your name: "))
+
 #List created to store the values of the scores for the various games
 
 ngscore = [0]
 wsscore = [0]
 drscore = [0]
+pyscore = [0]
 
 #Keeps track of the current score of the player for Number Guess and displays it. 
 def cur_ngscore_track():
@@ -11,6 +23,14 @@ def cur_ngscore_track():
 #Returns the first value of score for Number Guess.
 def cur_ngscore_add():
     return ngscore[0]
+
+#Keeps track of the current score of the player for pygame and displays it. 
+def cur_pyscore_track():
+    return pyscore[-1]
+
+#Returns the first value of score for pygame.
+def cur_pyscore_add():
+    return pyscore[0]
 
 #Keeps track of the current score of the player for dice roller challenge and displays it. 
 def cur_drscore_track():
@@ -60,7 +80,7 @@ def Number_Guess():
             for i in rnumlist:
                 if (gnum == rnum):
                     ngscore.append(cur_ngscore_add()+ 5)
-                    print("\nCongrautlations! You have successfully guessed the number and gained a score of", cur_ngscore_track())
+                    print("\nCongrautlations!", name, "You have successfully guessed the number and gained a score of", cur_ngscore_track())
                     break
                 else:
                     print("\nYour current score is:",cur_ngscore_track())
@@ -69,16 +89,16 @@ def Number_Guess():
             print("You have", count, "tries left")
             
         if (cur_ngscore_track() >=5):
-            print("\nYou have won the game with",cur_ngscore_track(),"points!")
+            print("\nYou have won the game with",cur_ngscore_track(),"points",name,"!")
         else:
-            print("\nUnfortunately you did not manage to win the game. \nBetter Luck Next Time!")
+            print("\nUnfortunately you did not manage to win the game. \nBetter Luck Next Time",name,"!")
             
         choice = str(input("\nWould you like to continue playing this game or return to the main menu?\nType 'y' to continue or press Enter to return:")).lower()
         if (choice == 'y'):
             print("________________________________________________________")
             Number_Guess()
         else:
-            print("\nYour current overall score is", overall_score())
+            print("\nYour current overall score is", overall_score(), name)
             #print(score)
             main_menu()
     except ValueError:
@@ -115,7 +135,7 @@ def dice_roller_challenge():
             sum(rolls)
             if die1 == 1 and die2 == 1:
                 print("________________________________________________________")
-                print("Oh no! You rolled double 1s! Your score resets to 0. Game over\n.")
+                print("Oh no! You rolled double 1s! Your score resets to 0. Game over",name,"\n.")
                 for i in range(rounds):
                     rolls.pop()
                 choice = str(input("\nWould you like to continue playing this game or return to the main menu?\nType 'y' to continue or press Enter to return:")).lower()
@@ -123,7 +143,7 @@ def dice_roller_challenge():
                     print("________________________________________________________")
                     dice_roller_challenge()
                 else:
-                    print("\nYour current overall score is", overall_score())
+                    print("\nYour current overall score is", overall_score(),name)
                     print("\nReturning to main menu...\n")
                     main_menu()
                
@@ -146,7 +166,7 @@ def dice_roller_challenge():
             print("________________________________________________________")
             dice_roller_challenge()
         else:
-            print("\nYour current overall score is", overall_score())
+            print("\nYour current overall score is", overall_score(),name)
             print("\nReturning to main menu...\n")
             main_menu()
             
@@ -155,6 +175,121 @@ def dice_roller_challenge():
         print("Something went wrong.Please try again")
         print("________________________________________________________")
         dice_roller_challenge()
+        
+
+def pygame():
+    # Set up some constants
+    WIDTH, HEIGHT = 800, 600
+    PADDLE_WIDTH, PADDLE_HEIGHT = 100, 20
+    BALL_SIZE = 20
+    BRICK_WIDTH, BRICK_HEIGHT = 80, 30
+    FRUIT_SIZE = 20
+
+    # Set up some colors
+    WHITE = (255, 255, 255)
+    RED = (255, 0, 0)
+    GREEN = (0, 255, 0)
+    BLUE = (0, 0, 255)
+
+    # Set up the display
+    SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
+
+    # Set up the fonts
+    FONT = pygame.font.Font(None, 36)
+
+    # Set up the paddle
+    PADDLE = pygame.Rect(WIDTH / 2 - PADDLE_WIDTH / 2, HEIGHT - PADDLE_HEIGHT - 20, PADDLE_WIDTH, PADDLE_HEIGHT)
+
+    # Set up the ball
+    BALL = pygame.Rect(WIDTH / 2 - BALL_SIZE / 2, HEIGHT / 2 - BALL_SIZE / 2, BALL_SIZE, BALL_SIZE)
+    BALL_SPEED_X = 5
+    BALL_SPEED_Y = -5
+
+    # Set up the bricks
+    BRICKS = []
+    for i in range(5):
+        for j in range(10):
+            BRICKS.append(pygame.Rect(j * (BRICK_WIDTH + 5), i * (BRICK_HEIGHT + 5), BRICK_WIDTH, BRICK_HEIGHT))
+
+    # Set up the fruits
+    FRUITS = ['apple', 'banana', 'cherry']
+    FRUIT_REWARDS = []
+
+    # Set up the score
+    pyscore.append(cur_pyscore_add() + 0)
+    SCORE = 0
+    # Game loop
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        # Move the paddle
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT] and PADDLE.x > 0:
+            PADDLE.x -= 5
+        if keys[pygame.K_RIGHT] and PADDLE.x < WIDTH - PADDLE_WIDTH:
+            PADDLE.x += 5
+
+        # Move the ball
+        BALL.x += BALL_SPEED_X
+        BALL.y += BALL_SPEED_Y
+
+        # Collision with walls
+        if BALL.x < 0 or BALL.x > WIDTH - BALL_SIZE:
+            BALL_SPEED_X *= -1
+        if BALL.y < 0:
+            BALL_SPEED_Y *= -1
+
+        # Collision with paddle
+        if BALL.colliderect(PADDLE):
+            BALL_SPEED_Y *= -1
+
+        # Collision with bricks
+        for brick in BRICKS[:]:
+            if BALL.colliderect(brick):
+                BRICKS.remove(brick)
+                BALL_SPEED_Y *= -1
+                FRUIT_REWARDS.append(random.choice(FRUITS))
+                SCORE += 1
+
+        # Draw everything
+        SCREEN.fill((0, 0, 0))
+        pygame.draw.rect(SCREEN, WHITE, PADDLE)
+        pygame.draw.rect(SCREEN, WHITE, BALL)
+        for brick in BRICKS:
+            pygame.draw.rect(SCREEN, GREEN, brick)
+        for i, fruit in enumerate(FRUIT_REWARDS):
+            if fruit == 'apple':
+                pygame.draw.circle(SCREEN, RED, (10 + i * FRUIT_SIZE, 10), FRUIT_SIZE)
+            elif fruit == 'banana':
+                pygame.draw.rect(SCREEN, (255, 255, 0), (10 + i * FRUIT_SIZE, 10, FRUIT_SIZE, FRUIT_SIZE))
+            elif fruit == 'cherry':
+                pygame.draw.circle(SCREEN, (139, 0, 0), (10 + i * FRUIT_SIZE, 10), FRUIT_SIZE)
+
+        # Update the display
+        pygame.display.flip()
+
+        # Cap the frame rate
+        pygame.time.delay(1000 // 60)
+
+        # Check for game over
+        if BALL.y > HEIGHT:
+            break
+
+    # Show the final score
+    SCREEN.fill((0, 0, 0))
+    text = FONT.render(f"Final score: {SCORE} points", True, WHITE)
+    pyscore.append(cur_pyscore_add() + SCORE)
+    SCREEN.blit(text, (WIDTH / 2 - text.get_width() / 2, HEIGHT / 2 - text.get_height() / 2))
+    pygame.display.flip()
+    pygame.time.delay(2000)
+    choice = input("Play another round of pygame? Type 'yes' to replay or press Enter to return to main menu: ").lower()
+    if (choice == 'y'):
+        pygame()
+    else:
+        main_menu()
         
 # Word_Scramble - Norman Ranger
 def Word_Scramble():
@@ -196,13 +331,13 @@ def Word_Scramble():
         
         
    
-#Defining a function which prompts the user to enter their name
-def user_info():
-    name = str(input("Please enter your name: "))
+
+
+
     
 
 #Call to function that prompts user to enter their name
-user_info()
+
 
 #Main menu function which prompts the user to choose between different games
 def main_menu():
@@ -210,7 +345,7 @@ def main_menu():
     print("\nPlease select a game from the list of options below: ")
     print("Game 1 - type 'A' to play Number Guess")
     print("Game 2 - type 'B' to play Dice Roller Challenge")
-    print("Game 3 - type 'xxx'")
+    print("Game 3 - type 'C' to play pygame")
     print("Game 4 - type 'D' to play Word Scramble")
     print("Exit - X")
     print("________________________________________________________")
@@ -224,8 +359,20 @@ def main_menu():
                     Number_Guess()
                 case 'B':
                     dice_roller_challenge()
+                case 'C':
+                    pygame()
                 case 'D':
                     Word_Scramble()
         else:
             print("Your average score for the games played is", avg_score())
             print("\nThank you for playing our games and we hope you decide to play again in the future.")
+        
+    except RuntimeError:
+        print("\nAn error has occurred, you will be redirected to the main menu to try again")
+        main_menu()
+    except ValueError:
+        print("You have entered an invalid option, you will be redirected to the main menu to try again")
+        main_menu()
+    except:
+        print("\n An unexpected error has occurred, you will be redirected to the main menu to try again")
+        main_menu()
