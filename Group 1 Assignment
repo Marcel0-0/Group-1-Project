@@ -1,42 +1,42 @@
-#Programming for Data Analytics Group Project
-#Date: March 22, 2025
-#Group Members: Terence Tucker - 2405308, Marcel Manning - 2002905, Candeece Garrick - 2409063, Norman Ranger - 2405961
-
-import random
-
-import statistics
-
 #List created to store the values of the scores for the various games
 
 ngscore = [0]
 wsscore = [0]
+drscore = [0]
 
-
-#Keeps track of the current score of the player and displays it. 
+#Keeps track of the current score of the player for Number Guess and displays it. 
 def cur_ngscore_track():
     return ngscore[-1]
 
-#Returns the first value of score.
+#Returns the first value of score for Number Guess.
 def cur_ngscore_add():
     return ngscore[0]
 
-#Keeps track of the current score of the player and displays it. 
+#Keeps track of the current score of the player for dice roller challenge and displays it. 
+def cur_drscore_track():
+    return drscore[-1]
+
+#Returns the first value of score for dice roller challenge.
+def cur_drscore_add():
+    return drscore[0]
+
+#Keeps track of the current score of the player for Word Scramble and displays it. 
 def cur_wsscore_track():
     return wsscore[-1]
 
-#Returns the first value of score.
+#Returns the first value of score for Word Scramble.
 def cur_wsscore_add():
     return wsscore[0]
 
 #Finds the sum of all the scores for the various games and returns it.
 def overall_score():
-    oscore = sum(ngscore) + sum(wsscore)
+    oscore = sum(ngscore) + sum(wsscore) + sum(drscore)
     return oscore
 
 #Finds the average of all the 
 def avg_score():
     oscore = sum(ngscore) + sum(wsscore)
-    ascore = statistics.mean([sum(ngscore), sum(wsscore)])
+    ascore = statistics.mean([sum(ngscore), sum(wsscore)], sum(drscore))
     return ascore
 
 
@@ -63,7 +63,6 @@ def Number_Guess():
                     print("\nCongrautlations! You have successfully guessed the number and gained a score of", cur_ngscore_track())
                     break
                 else:
-                    #ngscore.append(cur_ngscore_add()+ 0)
                     print("\nYour current score is:",cur_ngscore_track())
                     break
             count -= 1
@@ -74,9 +73,8 @@ def Number_Guess():
         else:
             print("\nUnfortunately you did not manage to win the game. \nBetter Luck Next Time!")
             
-        choice = str(input("\nWould you like to continue playing this game or return to the main menu?\nType 'yes' to continue or any other key to return:"))
-        if (choice == 'yes'):
-            print("\nYour current overall score is", overall_score())
+        choice = str(input("\nWould you like to continue playing this game or return to the main menu?\nType 'y' to continue or press Enter to return:")).lower()
+        if (choice == 'y'):
             print("________________________________________________________")
             Number_Guess()
         else:
@@ -94,6 +92,69 @@ def Number_Guess():
         print("________________________________________________________")
         Number_Guess()
     
+#dice_roller_challenge - Candeece Garrick
+def dice_roller_challenge():
+    print("\nWelcome to Dice Roller Challenge!")
+    print("Instructions:")
+    print("Roll two dice to reach a score of 80 or more.")
+    print("Be careful – if you roll double 1s, your total score resets to 0 and the game ends!")
+    print("Try to reach the target in as few rounds as possible.\n")
+    target_score = 80
+    drscore.append(cur_drscore_add() + 0)
+    rounds = 0
+    rolls = []
+    try:
+        while sum(rolls) < target_score:
+            input("Press Enter to roll the dice...")
+            die1 = random.randint(1, 6)
+            die2 = random.randint(1, 6)
+            total = die1 + die2
+            print(f"You rolled: {die1} and {die2} (Total: {total})")
+            rolls.append(total)
+            rounds += 1
+            sum(rolls)
+            if die1 == 1 and die2 == 1:
+                print("________________________________________________________")
+                print("Oh no! You rolled double 1s! Your score resets to 0. Game over\n.")
+                for i in range(rounds):
+                    rolls.pop()
+                choice = str(input("\nWould you like to continue playing this game or return to the main menu?\nType 'y' to continue or press Enter to return:")).lower()
+                if (choice == 'y'):
+                    print("________________________________________________________")
+                    dice_roller_challenge()
+                else:
+                    print("\nYour current overall score is", overall_score())
+                    print("\nReturning to main menu...\n")
+                    main_menu()
+               
+            print(f"Current score: {sum(rolls)}\n")
+            
+        drscore.append(cur_drscore_add() + sum(rolls))
+        if sum(rolls) >= target_score:
+            print(f"Congrats! You reached {cur_drscore_track()} points in {rounds} rounds!")
+        # Display stats
+        print("\n--- Game Statistics ---")
+        print(f"Total rounds played: {rounds}")
+        print(f"Scores each round: {rolls}")
+        print(f"Total score: {cur_drscore_track()}")
+        print(f"Average per roll: {sum(rolls)/len(rolls):.2f}")
+        print(f"Highest roll in a round: {max(rolls)}")
+        print(f"Lowest roll in a round: {min(rolls)}")
+        
+        choice = str(input("\nWould you like to continue playing this game or return to the main menu?\nType 'y' to continue or press Enter to return:")).lower()
+        if (choice == 'y'):
+            print("________________________________________________________")
+            dice_roller_challenge()
+        else:
+            print("\nYour current overall score is", overall_score())
+            print("\nReturning to main menu...\n")
+            main_menu()
+            
+    except:
+        print("________________________________________________________")
+        print("Something went wrong.Please try again")
+        print("________________________________________________________")
+        dice_roller_challenge()
         
 # Word_Scramble - Norman Ranger
 def Word_Scramble():
@@ -115,7 +176,6 @@ def Word_Scramble():
             else:
                 print(f"❌ Wrong! The correct word was: {word}\n")
 
-        #score.append(cur_score_add() + 0)
         wsscore.append(cur_wsscore_add() + round_score)
 
         print("🎉 You finished the Word Scramble round!")
@@ -123,8 +183,8 @@ def Word_Scramble():
         print("Your current overall score is:", overall_score())
         print("________________________________________________________")
 
-        choice = input("Play another Word Scramble round? Type 'yes' to replay or 'no' to return to main menu: ").lower()
-        if choice == 'yes':
+        choice = input("Play another Word Scramble round? Type 'yes' to replay or press Enter to return to main menu: ").lower()
+        if (choice == 'y'):
             Word_Scramble()
         else:
             main_menu()
@@ -149,7 +209,7 @@ def main_menu():
     
     print("\nPlease select a game from the list of options below: ")
     print("Game 1 - type 'A' to play Number Guess")
-    print("Game 2 - type 'xx'")
+    print("Game 2 - type 'B' to play Dice Roller Challenge")
     print("Game 3 - type 'xxx'")
     print("Game 4 - type 'D' to play Word Scramble")
     print("Exit - X")
@@ -162,34 +222,10 @@ def main_menu():
             match option:
                 case 'A':
                     Number_Guess()
-                  
+                case 'B':
+                    dice_roller_challenge()
                 case 'D':
                     Word_Scramble()
         else:
             print("Your average score for the games played is", avg_score())
             print("\nThank you for playing our games and we hope you decide to play again in the future.")
-        
-    except RuntimeError:
-        print("\nAn error has occurred, you will be redirected to the main menu to try again")
-        main_menu()
-    except ValueError:
-        print("You have entered an invalid option, you will be redirected to the main menu to try again")
-        main_menu()
-    except:
-        print("\n An unexpected error has occurred, you will be redirected to the main menu to try again")
-        main_menu()
-    
-                   
-#Call to main menu function
-main_menu()
-                
-        
-         
-    
-    
-
-
-
-
-
-                
